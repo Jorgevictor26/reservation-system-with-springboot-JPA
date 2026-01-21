@@ -40,11 +40,12 @@ public class ReservationService {
         return repository.findAll();
     }
 
-    public void DeletedById(Long idNumber) {
+    public void DeletedById(Long id) {
         try {
-            repository.deleteById(idNumber);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(idNumber);
+            if (!repository.existsById(id)) {
+                throw new ResourceNotFoundException(id);
+            }
+            repository.deleteById(id);
         } catch (DataAccessException e) {
             throw new DatabaseException(e.getMessage());
         }

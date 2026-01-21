@@ -24,8 +24,8 @@ public class ClientResource {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Client> findaByIdNumber(@PathVariable Long id) {
-        Client client = clientService.findByIdNumber(id);
+    public ResponseEntity<Client> findaById(@PathVariable Long id) {
+        Client client = clientService.findById(id);
         return ResponseEntity.ok().body(client);
     }
 

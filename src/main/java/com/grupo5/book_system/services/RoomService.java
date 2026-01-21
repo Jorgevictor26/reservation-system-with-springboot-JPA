@@ -36,9 +36,10 @@ public class RoomService {
 
     public void DeletedById(Integer id) {
         try {
+            if (!repository.existsById(id)) {
+                throw new ResourceNotFoundException(id);
+            }
             repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(id);
         } catch (DataAccessException e) {
             throw new DatabaseException(e.getMessage());
         }
