@@ -35,6 +35,30 @@ public class ReservationResource {
         return ResponseEntity.ok().body(reservation);
     }
 
+    @PutMapping(value = "/{id}/cancel")
+    public ResponseEntity<Void> cancel(@PathVariable Long id){
+        reservationService.cancel(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/{id}/checkin")
+    public ResponseEntity<Void>checkIn(@PathVariable Long id){
+        reservationService.checkIn(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/{id}/checkout")
+    public ResponseEntity<Void>checkOut(@PathVariable Long id){
+        reservationService.checkOut(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+        reservationService.DeletedById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping
     public ResponseEntity<Reservation> insert(@RequestBody Reservation reservation) {
         reservation = reservationService.insert(reservation);

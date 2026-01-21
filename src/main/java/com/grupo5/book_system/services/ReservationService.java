@@ -1,8 +1,10 @@
 package com.grupo5.book_system.services;
+
 import com.grupo5.book_system.entities.Reservation;
-import com.grupo5.book_system.entities.Reservation;
+import com.grupo5.book_system.entities.Room;
+import com.grupo5.book_system.entities.enums.ReservationStatus;
 import com.grupo5.book_system.repositories.ReservationRepository;
-import com.grupo5.book_system.repositories.ReservationRepository;
+import com.grupo5.book_system.services.exceptions.BussinessException;
 import com.grupo5.book_system.services.exceptions.DatabaseException;
 import com.grupo5.book_system.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,8 @@ public class ReservationService {
     }
 
     public Reservation insert(Reservation reservation) {
+
+        checkDateOverlap(reservation.getRoom(), reservation.getCheckinDate(), reservation.getCheckOutDate());
         return repository.save(reservation);
     }
 
@@ -61,6 +66,48 @@ public class ReservationService {
         entity.setRoom(reservation.getRoom());
         entity.setCheckinDate(reservation.getCheckinDate());
         entity.setCheckOutDate(reservation.getCheckOutDate());
+    }
+
+    public void cancel(Long id) {
+        Reservation reservation = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+        if (reservation.getReservationStatus() != ReservationStatus.CONFIRMED) {
+            throw new BussinessException("U cannot cancel, Status: " + reservation.getReservationStatus());
+        }
+        reservation.setReservationStatus(ReservationStatus.CANCELED);
+        repository.save(reservation);
+    }
+
+    public void checkIn(Long id) {
+        Reservation reservation = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if (reservation.getReservationStatus() != ReservationStatus.CONFIRMED) {
+            throw new BussinessException("Invalid CheckIn. Status: " + reservation.getReservationStatus());
+        }
+
+        reservation.setReservationStatus(ReservationStatus.CHECKED_IN);
+        repository.save(reservation);
+    }
+
+    public void checkOut(Long id) {
+        Reservation reservation = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if (reservation.getReservationStatus() != ReservationStatus.CHECKED_IN) {
+            throw new BussinessException("Invalid CheckOut. Status: " + reservation.getReservationStatus());
+        }
+
+        reservation.setReservationStatus(ReservationStatus.CHECKED_IN);
+        repository.save(reservation);
+    }
+
+    private void checkDateOverlap(Room room, LocalDate dataCheckIn, LocalDate dataCheckOut) {
+        for (Reservation r : repository.findAll()) {
+            if (r.getRoom().equals(room)
+                    && dataCheckIn.isBefore(r.getCheckOutDate())
+                    && dataCheckOut.isAfter(r.getCheckinDate())) {
+                throw new BussinessException("The room will be rented at this time");
+            }
+        }
     }
 
 }

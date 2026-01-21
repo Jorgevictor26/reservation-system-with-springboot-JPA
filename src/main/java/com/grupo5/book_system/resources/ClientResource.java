@@ -34,6 +34,11 @@ public class ClientResource {
         client = clientService.Update(id, client);
         return ResponseEntity.ok().body(client);
     }
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+        clientService.DeletedById(id);
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping
     public ResponseEntity<Client> insert(@RequestBody Client client) {

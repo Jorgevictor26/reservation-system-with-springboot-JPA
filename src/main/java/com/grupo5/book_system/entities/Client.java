@@ -1,5 +1,6 @@
 package com.grupo5.book_system.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +31,10 @@ public class Client implements Serializable {
     private String surname;
     private String email;
     private String phone;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    List<Reservation> reservations = new ArrayList<>();
 
     public Client(Long id, String bilhete, String name, String surname, String email, String phone) {
         this.id = id;
