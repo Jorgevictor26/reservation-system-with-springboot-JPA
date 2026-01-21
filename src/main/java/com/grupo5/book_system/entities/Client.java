@@ -1,8 +1,6 @@
 package com.grupo5.book_system.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,15 +20,18 @@ public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    String idNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    String name;
-    String surname;
-    String email;
-    String phone;
+    private String Bilhete;
+    private String name;
+    private String surname;
+    private String email;
+    private String phone;
 
-    public Client(String idNumber, String name, String surname, String email, String phone) {
-        this.idNumber = idNumber;
+    public Client(Long id, String bilhete, String name, String surname, String email, String phone) {
+        this.id = id;
+        Bilhete = bilhete;
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -41,11 +42,11 @@ public class Client implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return Objects.equals(idNumber, client.idNumber);
+        return Objects.equals(id, client.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(idNumber);
+        return Objects.hashCode(id);
     }
 }

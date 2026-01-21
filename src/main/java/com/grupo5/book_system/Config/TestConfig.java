@@ -24,9 +24,9 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Client client = new Client("005452465BA041", "Jorge", "Victor", "jv@gmail", "930296746");
-        Client client1 = new Client("005452465BA040", "Helena", "Panzo", "hp@gmail", "9000000");
-        Client client2 = new Client("005452465BA041", "Lucio", "Victorino", "lv@gmail", "930296746");
+        Client client = new Client(null, "005452465BA041", "Jorge", "Victor", "jv@gmail", "930296746");
+        Client client1 = new Client(null ,"005452465BA040", "Helena", "Panzo", "hp@gmail", "9000000");
+        Client client2 = new Client(null, "005452465BA041", "Lucio", "Victorino", "lv@gmail", "930296746");
 
         Room room = new Room(null, RoomType.STANDARD, 25000.0, 3, RoomStatus.ACTIVE);
         Room room1 = new Room(null, RoomType.STANDARD, 28000.0, 3, RoomStatus.MAINTENANCE);

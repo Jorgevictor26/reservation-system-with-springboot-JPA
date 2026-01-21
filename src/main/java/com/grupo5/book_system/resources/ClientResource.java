@@ -23,14 +23,14 @@ public class ClientResource {
         return ResponseEntity.ok().body(clients);
     }
 
-    @GetMapping(value = "/{idNumber}")
-    public ResponseEntity<Client> findaByIdNumber(@PathVariable String idNumber) {
-        Client client = clientService.findByIdNumber(idNumber);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Client> findaByIdNumber(@PathVariable Long id) {
+        Client client = clientService.findByIdNumber(id);
         return ResponseEntity.ok().body(client);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Client> update(@PathVariable String id, @RequestBody Client client) {
+    public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client client) {
         client = clientService.Update(id, client);
         return ResponseEntity.ok().body(client);
     }
@@ -39,7 +39,7 @@ public class ClientResource {
     public ResponseEntity<Client> insert(@RequestBody Client client) {
         client = clientService.insert(client);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(client.getIdNumber()).toUri();
+                .buildAndExpand(client.getId()).toUri();
         return ResponseEntity.created(uri).body(client);
     }
 
