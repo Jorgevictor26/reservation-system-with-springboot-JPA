@@ -4,6 +4,7 @@ import com.grupo5.book_system.entities.Client;
 import com.grupo5.book_system.entities.Room;
 import com.grupo5.book_system.repositories.ClientRepository;
 import com.grupo5.book_system.repositories.RoomRepository;
+import com.grupo5.book_system.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,6 @@ public class RoomService {
     }
     public Room findByRoomNumber(Integer idNumber){
         Optional<Room> rooms = repository.findById(idNumber);
-        return rooms.orElseThrow(RuntimeException::new);
+        return rooms.orElseThrow(() -> new ResourceNotFoundException (idNumber));
     }
 }
