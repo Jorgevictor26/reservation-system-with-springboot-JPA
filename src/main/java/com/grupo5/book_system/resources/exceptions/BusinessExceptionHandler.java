@@ -12,7 +12,7 @@ import java.time.Instant;
 @ControllerAdvice
 public class BusinessExceptionHandler {
     @ExceptionHandler(BussinessException.class)
-    public ResponseEntity<StandardError> cancellationRule(BussinessException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> BusinessRule(BussinessException e, HttpServletRequest request) {
         String error = "Business Rules";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());

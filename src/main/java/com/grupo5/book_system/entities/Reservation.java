@@ -11,6 +11,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -42,6 +44,9 @@ public class Reservation implements Serializable {
     @ManyToOne
     @JoinColumn(name = "FK_room")
     private Room room;
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
     public Reservation(Long reservationCode, LocalDate checkinDate, LocalDate checkOutDate,
                        ReservationStatus reservationStatus, Integer numberOfGuests,
