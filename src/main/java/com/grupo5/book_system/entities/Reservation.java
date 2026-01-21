@@ -1,5 +1,6 @@
 package com.grupo5.book_system.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.grupo5.book_system.entities.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,12 +25,14 @@ public class Reservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reservationCode;
+    private Long reservationCode;
 
     private LocalDate checkinDate;
     private LocalDate checkOutDate;
     private Integer reservationStatus;
     private Integer numberOfGuests;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm", timezone = "UTC")
     private LocalDateTime creationDate;
 
     @ManyToOne
@@ -40,7 +43,7 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "FK_room")
     private Room room;
 
-    public Reservation(Integer reservationCode, LocalDate checkinDate, LocalDate checkOutDate,
+    public Reservation(Long reservationCode, LocalDate checkinDate, LocalDate checkOutDate,
                        ReservationStatus reservationStatus, Integer numberOfGuests,
                        Client client, Room room) {
 
