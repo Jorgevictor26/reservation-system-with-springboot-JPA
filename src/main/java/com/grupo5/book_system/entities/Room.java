@@ -23,12 +23,12 @@ public class Room implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer roomNumber;
+    private Integer roomNumber;
 
-    Integer roomType;
-    Double baseDailyPrice;
-    Integer capacity;
-    Integer roomStatus;
+    private Integer roomType;
+    private Double baseDailyPrice;
+    private Integer capacity;
+    private Integer roomStatus;
 
     public Room(Integer roomNumber, RoomType roomType, Double baseDailyPrice, Integer capacity, RoomStatus roomStatus) {
         this.roomNumber = roomNumber;

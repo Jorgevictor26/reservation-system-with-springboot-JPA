@@ -5,10 +5,7 @@ import com.grupo5.book_system.entities.Room;
 import com.grupo5.book_system.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,18 @@ public class RoomResource {
     public ResponseEntity<Room> findaByRoomNumber(@PathVariable Integer idNumber){
         Room room = roomService.findByRoomNumber(idNumber);
         return ResponseEntity.ok().body(room);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
+        roomService.DeletedById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Room> update(@PathVariable Integer id, @RequestBody Room room){
+         Room newRoom = roomService.Update(id, room);
+        return ResponseEntity.ok().body(newRoom);
     }
 
 }
