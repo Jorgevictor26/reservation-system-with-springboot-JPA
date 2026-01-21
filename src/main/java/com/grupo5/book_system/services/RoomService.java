@@ -21,13 +21,19 @@ public class RoomService {
         this.repository = repository;
     }
 
-    public List<Room> findALL(){
+    public Room insert(Room room) {
+        return repository.save(room);
+    }
+
+    public Room findByRoomNumber(Integer id) {
+        Optional<Room> rooms = repository.findById(id);
+        return rooms.orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    public List<Room> findALL() {
         return repository.findAll();
     }
-    public Room findByRoomNumber(Integer id){
-        Optional<Room> rooms = repository.findById(id);
-        return rooms.orElseThrow(() -> new ResourceNotFoundException (id));
-    }
+
     public void DeletedById(Integer id) {
         try {
             repository.deleteById(id);
@@ -37,7 +43,6 @@ public class RoomService {
             throw new DatabaseException(e.getMessage());
         }
     }
-
 
     public Room Update(Integer id, Room room) {
         try {

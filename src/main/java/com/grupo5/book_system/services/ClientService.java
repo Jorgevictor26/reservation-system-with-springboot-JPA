@@ -1,6 +1,7 @@
 package com.grupo5.book_system.services;
 
 import com.grupo5.book_system.entities.Client;
+import com.grupo5.book_system.entities.Room;
 import com.grupo5.book_system.repositories.ClientRepository;
 import com.grupo5.book_system.services.exceptions.DatabaseException;
 import com.grupo5.book_system.services.exceptions.ResourceNotFoundException;
@@ -21,13 +22,17 @@ public class ClientService {
         this.repository = repository;
     }
 
-    public List<Client> findALL() {
-        return repository.findAll();
+    public Client insert(Client client) {
+        return repository.save(client);
     }
 
     public Client findByIdNumber(String idNumber) {
         Optional<Client> client = repository.findById(idNumber);
         return client.orElseThrow(() -> new ResourceNotFoundException(idNumber));
+    }
+
+    public List<Client> findALL() {
+        return repository.findAll();
     }
 
     public void DeletedById(String idNumber) {
