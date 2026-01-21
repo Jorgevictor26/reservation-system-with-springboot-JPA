@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +16,10 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Table(name = "tb_client")
-public class Client {
+public class Client implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     String idNumber;
