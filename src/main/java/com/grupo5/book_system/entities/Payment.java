@@ -1,16 +1,16 @@
 package com.grupo5.book_system.entities;
 
-import com.grupo5.book_system.entities.enums.PaymentMethod;
-import com.grupo5.book_system.entities.enums.ServiceType;
+import com.grupo5.book_system.entities.enums.Method;
+import com.grupo5.book_system.entities.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -18,6 +18,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "tb_payment")
 public class Payment implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -25,55 +26,31 @@ public class Payment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description;
-    private Integer serviceType;
-    private Double unitPrice;
-    private Integer quantity;
-    private Integer paymentMethod;
-
-    public Payment(Long id, String description, ServiceType serviceType, Double unitPrice,
-                   Integer quantity, PaymentMethod paymentMethod) {
-        this.id = id;
-        this.description = description;
-        setPaymentMethod(paymentMethod);
-        this.unitPrice = unitPrice;
-        this.quantity = quantity;
-        setServiceType(serviceType);
-    }
+    private Double paidValue;
+    private LocalDateTime paymentDate;
+    private Integer method;
+    private Integer paymentStatus;
 
     @ManyToOne
     @JoinColumn(name = "FK_reservation")
     Reservation reservation;
 
-
-    public void setServiceType(ServiceType serviceType) {
-        this.serviceType = serviceType.getCode();
+    public void setMethod(Method method) {
+        this.method = method.getCode();
     }
 
-    public ServiceType getServiceType() {
-        return ServiceType.valueOf(serviceType);
+    public Method getMethod() {
+        return Method.valueOf(method);
     }
 
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        if(paymentMethod!=null)
-        {
-            this.paymentMethod = paymentMethod.getCode();
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        if (paymentStatus != null) {
+            this.paymentStatus = paymentStatus.getCode();
         }
     }
 
-    public PaymentMethod getPaymentMethod() {
-        return PaymentMethod.valueOf(paymentMethod);
+    public PaymentStatus getPaymentStatus() {
+        return PaymentStatus.valueOf(paymentStatus);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Payment payment = (Payment) o;
-        return Objects.equals(id, payment.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }

@@ -1,8 +1,8 @@
 package com.grupo5.book_system.services;
 
 import com.grupo5.book_system.entities.Payment;
+import com.grupo5.book_system.repositories.AddicionalRepository;
 import com.grupo5.book_system.repositories.PaymentRepository;
-import com.grupo5.book_system.repositories.RoomRepository;
 import com.grupo5.book_system.services.exceptions.DatabaseException;
 import com.grupo5.book_system.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,7 +34,7 @@ public class PaymentService {
         return repository.findAll();
     }
 
-    public void DeletedById(Long id) {
+    public void DeleteById(Long id) {
         try {
             if (!repository.existsById(id)) {
                 throw new ResourceNotFoundException(id);
@@ -43,20 +43,5 @@ public class PaymentService {
         } catch (DataAccessException e) {
             throw new DatabaseException(e.getMessage());
         }
-    }
-
-    public Payment Update(Long id, Payment payment) {
-        try {
-            Payment entity = repository.getReferenceById(id);
-            updateData(entity, payment);
-            return repository.save(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
-        }
-    }
-
-    private void updateData(Payment entity, Payment payment) {
-        entity.setServiceType(payment.getServiceType());
-        entity.setQuantity(payment.getQuantity());
     }
 }

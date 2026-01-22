@@ -46,7 +46,10 @@ public class Reservation implements Serializable {
     private Room room;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations = new ArrayList<>();
+    private List<AddicionalService> addicionalServices = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reservation",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
 
     public Reservation(Long reservationCode, LocalDate checkinDate, LocalDate checkOutDate,
                        ReservationStatus reservationStatus, Integer numberOfGuests,
