@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,20 @@ public class ReservationService {
         }
     }
 
+    public Reservation updateDates(Long id, LocalDate checkinDate, LocalDate CheckoutDate) {
+
+        Reservation reservation = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        checkDateOverlap(reservation.getRoom(), checkinDate, CheckoutDate);
+        checkData(checkinDate, CheckoutDate);
+
+        reservation.setCheckinDate(checkinDate);
+        reservation.setCheckOutDate(CheckoutDate);
+
+        return repository.save(reservation);
+    }
+
     private void updateData(Reservation entity, Reservation reservation) {
         entity.setClient(reservation.getClient());
         entity.setRoom(reservation.getRoom());
@@ -98,6 +113,71 @@ public class ReservationService {
 
         reservation.setReservationStatus(ReservationStatus.CHECKED_IN);
         repository.save(reservation);
+    }
+
+    private long getNumberOfNights(LocalDate checkInDate, LocalDate checkOutDate) {
+        return ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+    }
+
+    private double getAccommodationSubtotal(Long id) {
+        Reservation reservation = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+        return getNumberOfNights(reservation.getCheckinDate(), reservation.getCheckOutDate())
+                * reservation.getRoom().getBaseDailyPrice();
+    }
+
+    public double getAccommodationTotal(Long id) {
+        Reservation reservation = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+
+        double total;
+
+        switch (reservation.getRoom().getRoomType()) {
+            case STANDARD -> total = getAccommodationSubtotal(id);
+            case DELUXE -> total = getAccommodationSubtotal(id) * 1.15;
+            case SUITE -> total = getAccommodationSubtotal(id) * 1.30;
+            default -> throw new BussinessException("Invalid room type");
+        }
+
+        return total;
+    }
+
+    public double getTotalReservation(Long id) {
+
+        Reservation reservation = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+        double totalServices = reservation.getAddicionalServices().stream()
+                .mapToDouble(service ->
+                        service.getTotalService(
+                                getNumberOfNights(checkInDate, checkOutDate)))
+                .sum();
+
+        return getAccommodationTotal(id) + totalServices;
+    }
+
+    public double getBalance() {
+        return getTotalReservation() - getTotalPaid();
+    }
+    
+    private void checkData(LocalDate checkinDate, LocalDate checkoutDate) {
+
+        LocalDate actualDate = LocalDate.now();
+
+        if (checkinDate.isBefore(actualDate) || checkoutDate.isBefore(actualDate)) {
+            throw new BussinessException("Invalid date. Reservation must be superior the actual date");
+        }
+        if (checkinDate.isAfter(checkoutDate)) {
+            throw new BussinessException("Checkin must be before checkout");
+        }
+        if (getNumberOfNights(checkinDate, checkoutDate) <= 0) {
+            throw new BussinessException("Invalid date, U gotta stay at least one night");
+        }
+    }
+
+    private void checkNumberOfGuests(int numberOfGuests, Room room) {
+        if (numberOfGuests > room.getCapacity()) {
+            throw new BussinessException("U Can't Exceed the maximum capacity");
+        }
     }
 
     private void checkDateOverlap(Room room, LocalDate dataCheckIn, LocalDate dataCheckOut) {

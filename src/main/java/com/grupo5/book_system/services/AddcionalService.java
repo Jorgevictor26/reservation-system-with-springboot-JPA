@@ -1,6 +1,7 @@
 package com.grupo5.book_system.services;
 
 import com.grupo5.book_system.entities.AddicionalService;
+import com.grupo5.book_system.entities.enums.PaymentMethod;
 import com.grupo5.book_system.repositories.AddicionalRepository;
 import com.grupo5.book_system.services.exceptions.DatabaseException;
 import com.grupo5.book_system.services.exceptions.ResourceNotFoundException;
